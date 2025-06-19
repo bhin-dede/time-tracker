@@ -1,0 +1,171 @@
+@import url('https://cdn.tailwindcss.com');
+
+body { 
+  margin: 0; 
+  padding: 0; 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #111827;
+  color: white;
+}
+
+#app {
+  max-width: 28rem; 
+  margin: 0 auto; 
+  background: #111827; 
+  color: white; 
+  min-height: 100vh; 
+}
+
+/* Tailwind가 로드되지 않을 경우를 위한 백업 스타일 */
+.bg-gray-900 { background-color: #111827; }
+.bg-gray-800 { background-color: #1f2937; }
+.bg-gray-700 { background-color: #374151; }
+.bg-gray-600 { background-color: #4b5563; }
+.bg-blue-600 { background-color: #2563eb; }
+.bg-blue-700 { background-color: #1d4ed8; }
+.bg-green-600 { background-color: #16a34a; }
+.bg-green-700 { background-color: #15803d; }
+.bg-yellow-600 { background-color: #ca8a04; }
+.bg-yellow-700 { background-color: #a16207; }
+.bg-red-400 { background-color: #f87171; }
+.bg-red-300 { background-color: #fca5a5; }
+
+.text-white { color: #ffffff; }
+.text-blue-400 { color: #60a5fa; }
+.text-gray-400 { color: #9ca3af; }
+.text-gray-500 { color: #6b7280; }
+.text-red-400 { color: #f87171; }
+.text-red-300 { color: #fca5a5; }
+
+.p-4 { padding: 1rem; }
+.p-6 { padding: 1.5rem; }
+.p-8 { padding: 2rem; }
+.px-4 { padding-left: 1rem; padding-right: 1rem; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.py-8 { padding-top: 2rem; padding-bottom: 2rem; }
+.pb-6 { padding-bottom: 1.5rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.ml-2 { margin-left: 0.5rem; }
+.mr-2 { margin-right: 0.5rem; }
+
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-full { border-radius: 9999px; }
+
+.text-center { text-align: center; }
+.text-xl { font-size: 1.25rem; }
+.text-6xl { font-size: 3.75rem; }
+.text-2xl { font-size: 1.5rem; }
+.text-lg { font-size: 1.125rem; }
+.text-sm { font-size: 0.875rem; }
+.text-xs { font-size: 0.75rem; }
+
+.font-bold { font-weight: 700; }
+.font-semibold { font-weight: 600; }
+.font-mono { font-family: ui-monospace, SFMono-Regular, monospace; }
+
+.flex { display: flex; }
+.items-center { align-items: center; }
+.items-start { align-items: flex-start; }
+.justify-center { justify-content: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 0.5rem; }
+.gap-3 { gap: 0.75rem; }
+.flex-1 { flex: 1 1 0%; }
+
+.w-full { width: 100%; }
+.min-h-screen { min-height: 100vh; }
+
+.transition-colors { transition: color 0.15s, background-color 0.15s; }
+.cursor-not-allowed { cursor: not-allowed; }
+.opacity-90 { opacity: 0.9; }
+
+.space-y-1 > * + * { margin-top: 0.25rem; }
+.space-y-3 > * + * { margin-top: 0.75rem; }
+
+/* 호버 효과 */
+.hover\:bg-green-700:hover { background-color: #15803d; }
+.hover\:bg-blue-700:hover { background-color: #1d4ed8; }
+.hover\:bg-yellow-700:hover { background-color: #a16207; }
+.hover\:bg-gray-700:hover { background-color: #374151; }
+.hover\:text-red-300:hover { color: #fca5a5; }
+
+/* 비활성화 상태 */
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* 버튼 기본 스타일 */
+button {
+  border: none;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent; /* 기본 배경 제거 */
+}
+
+/* 입력 필드 스타일 */
+input {
+  border: none;
+  outline: none;
+}
+
+/* 작업명 입력 박스 추가 스타일 */
+input[type="text"] {
+  width: 100%;
+  background-color: #374151;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+  text-align: center !important;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+input[type="text"]:focus {
+  background-color: #4b5563;
+  outline: 2px solid #60a5fa;
+}
+
+input[type="text"]::placeholder {
+  color: #9ca3af;
+  text-align: center;
+}
+
+/* 포커스 시 placeholder 숨기기 */
+input[type="text"]:focus::placeholder {
+  color: transparent;
+}
+
+/* 삭제 버튼들 스타일 수정 */
+.delete-btn {
+  background: transparent !important;
+  color: #f87171;
+  padding: 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.delete-btn:hover {
+  background: rgba(248, 113, 113, 0.1) !important;
+  color: #fca5a5;
+}
+
+.clear-all-btn {
+  background: transparent !important;
+  color: #f87171;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.25rem;
+}
+
+.clear-all-btn:hover {
+  background: rgba(248, 113, 113, 0.1) !important;
+  color: #fca5a5;
+}
