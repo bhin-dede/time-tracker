@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>시간 기록 워치</title>
+    <meta name="description" content="간편한 시간 기록 및 관리 앱">
+    <meta name="theme-color" content="#1f2937">
+    
+    <!-- PWA 설정 -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoi7Iuc6rCEIOq4sOuhnSDsm4zsuZAiLCJzaG9ydF9uYW1lIjoi7Iuc6rCEIOq4sOuhnSIsInN0YXJ0X3VybCI6Ii8iLCJkaXNwbGF5Ijoic3RhbmRhbG9uZSIsImJhY2tncm91bmRfY29sb3IiOiIjMWYyOTM3IiwidGhlbWVfY29sb3IiOiIjMWYyOTM3IiwiaWNvbnMiOlt7InNyYyI6ImRhdGE6aW1hZ2Uvc3ZnK3htbDtiYXNlNjQsUEhOMlp5QjNhV1IwYUQwaU5USTBJaUJvWldsbmFIUTlJalV5TkNJZ2RtbGxkMEp2ZUQwaU1DQXdJRFV5TkNBMU1qUWlJR1pwYkd3OUluZG9hWFJsSWlCNGJXeHVjejBpYUhSMGNEb3ZMM2QzZHk1M015NXZjbWN2TWpBd01DOXpkbWNpUGp4d1lYUm9JR1E5SWcwS1RURXlOaTA1TkdNeE5pNDBMVGsxSUROd2FTMHhNbU10TVM0NExURTNMak10TWk0eExUUTNMakV0TWk0eExUSTNJRGx3YVMweE1rTnpNQzR5SURNNExqY2dNakl1TlNBNE5TNWpiVEkzSUdOdU5EVXVOaUExTkM0eUlEVTBMakpqTUM0eUxUSXlMamNnTWpJdU5TMDBOUzQySURVMExqSXROVFF1TWtNNE5TNHhMVGt3TGpjZ01UTTFMams1TFRFMk1pNHpJREV4T1M0NExURXpOaTQ0Y3pBdU15NHlMVFl1TnkwdU9TMDJORE10TGprdE5UQXRPVEE1WkNJdlBnMEtQSEJoZEdnZ1pEMGlUVEkwT0NBMk1pNDFZekl1TkMwdU9DQTBMakl0TWk0M0lEUXVOUzAwTGpWMk5qVmpNQzR5SURJdU5pNHhJRFV1TXlBekxqVWdOVE11TlM0MklERXdMakl0TWk0NElERTJMamN0TlM0eElESTJMakZETkRVNUxqa2dOVGsySURRMU9TNDVJRFUzTUM0eUlEUTFPUzQ1SURVMk55NDJZelZsTGpFdE1EQXRNUEV1Tnkwd0xqWXROVE10TGpZdE5UTXVPV1U0TGpVdE1qQXROUzQxTFRNNUxqTXROUzQxTFRVeElURXhMak10TVMweUxqSXRNQzQ1TFRNdU5TMHhMakp0TVRNd09ESXROek15TGpGeklEQXVOQzB5TGpJZ01DNDNMVFJXTldOek1TNHhMVEl1TnlBekxqVXROUzQ1SURFMU9TNDFMVFk0TGpOdE16SXVNaTA0T1M0eVlqZGlMaTh0TVRVdU9TMDFNeTQzTFRJMkxqSXROa011TmpnNUxEVXhNUzQ0SWlBZ0x6NDhMM04yWnowaUlHbGpiMjV6SWpvaVNXbEVWVGNnUjJScGRHeG1VVzRnUldOb2JYWmFJek5ITFZJMElGQkVNVUV5VkMxQ1p6TTNVMGxTSUVoeVUxa3RRVk5YVkNJOUlHWnBiR3c5SW1GZ1dISkJWa0U0VlVGSll6QmtXVU4wY0ZCdVZXMUJlRTVOV1V4dWRrRXRPVE1nTVVNNU1UWWlJQzgrSWk4K0lqNHNJbk5wZW1WeklqcGJJbVJsWm1GMWJIUWlYWDA9Iiwic2l6ZXMiOiI1MTJ4NTEyIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwifV19">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .app-container { max-width: 28rem; margin: 0 auto; background: #111827; color: white; min-height: 100vh; }
+    </style>
+</head>
+<body class="bg-gray-900">
+    <div id="app"></div>
+
+    <script>
+        const { useState, useEffect, useRef } = React;
+
+        function TimeTrackerWatch() {
+            const [time, setTime] = useState(0);
+            const [isRunning, setIsRunning] = useState(false);
+            const [records, setRecords] = useState([]);
+            const [taskName, setTaskName] = useState('');
+            const [startTime, setStartTime] = useState(null);
+            const intervalRef = useRef(null);
+            const [currentTime, setCurrentTime] = useState(new Date());
+            const [deferredPrompt, setDeferredPrompt] = useState(null);
+            const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+
+            useEffect(() => {
+                const timer = setInterval(() => {
+                    setCurrentTime(new Date());
+                }, 1000);
+                return () => clearInterval(timer);
+            }, []);
+
+            useEffect(() => {
+                const savedRecords = localStorage.getItem('timeTrackerRecords');
+                if (savedRecords) {
+                    try {
+                        setRecords(JSON.parse(savedRecords));
+                    } catch (error) {
+                        console.error('기록 불러오기 실패:', error);
+                    }
+                }
+            }, []);
+
+            useEffect(() => {
+                if (records.length > 0) {
+                    localStorage.setItem('timeTrackerRecords', JSON.stringify(records));
+                }
+            }, [records]);
+
+            useEffect(() => {
+                const handleBeforeInstallPrompt = (e) => {
+                    e.preventDefault();
+                    setDeferredPrompt(e);
+                    setShowInstallPrompt(true);
+                };
+
+                window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+                
+                return () => {
+                    window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+                };
+            }, []);
+
+            useEffect(() => {
+                if (isRunning) {
+                    intervalRef.current = setInterval(() => {
+                        setTime(prevTime => prevTime + 1);
+                    }, 1000);
+                } else {
+                    clearInterval(intervalRef.current);
+                }
+
+                return () => clearInterval(intervalRef.current);
+            }, [isRunning]);
+
+            const formatTime = (seconds) => {
+                const hours = Math.floor(seconds / 3600);
+                const minutes = Math.floor((seconds % 3600) / 60);
+                const secs = seconds % 60;
+                
+                if (hours > 0) {
+                    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+                }
+                return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+            };
+
+            const handleStart = () => {
+                setIsRunning(true);
+                if (!startTime) {
+                    setStartTime(new Date());
+                }
+            };
+
+            const handlePause = () => {
+                setIsRunning(false);
+            };
+
+            const handleReset = () => {
+                setIsRunning(false);
+                setTime(0);
+                setStartTime(null);
+            };
+
+            const handleSave = () => {
+                if (time > 0 && startTime) {
+                    const endTime = new Date();
+                    const newRecord = {
+                        id: Date.now(),
+                        taskName: taskName || '작업',
+                        duration: time,
+                        startTime: startTime.toLocaleString('ko-KR'),
+                        endTime: endTime.toLocaleString('ko-KR'),
+                        timestamp: new Date().toLocaleString('ko-KR')
+                    };
+                    setRecords(prev => [newRecord, ...prev]);
+                    setTaskName('');
+                    handleReset();
+                }
+            };
+
+            const handleDeleteRecord = (id) => {
+                const updatedRecords = records.filter(record => record.id !== id);
+                setRecords(updatedRecords);
+                if (updatedRecords.length === 0) {
+                    localStorage.removeItem('timeTrackerRecords');
+                }
+            };
+
+            const handleClearAllRecords = () => {
+                if (window.confirm('모든 기록을 삭제하시겠습니까?')) {
+                    setRecords([]);
+                    localStorage.removeItem('timeTrackerRecords');
+                }
+            };
+
+            const handleInstallApp = async () => {
+                if (!deferredPrompt) return;
+                
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                
+                if (outcome === 'accepted') {
+                    setShowInstallPrompt(false);
+                }
+                setDeferredPrompt(null);
+            };
+
+            const getTotalTime = () => {
+                return records.reduce((total, record) => total + record.duration, 0);
+            };
+
+            return React.createElement('div', { className: 'app-container' }, [
+                showInstallPrompt && React.createElement('div', { 
+                    key: 'install-banner',
+                    className: 'bg-green-600 p-3 text-center text-sm' 
+                }, [
+                    React.createElement('span', { 
+                        key: 'text',
+                        className: 'mr-2' 
+                    }, '📱 홈 화면에 추가하여 앱처럼 사용하세요!'),
+                    React.createElement('button', { 
+                        key: 'install-btn',
+                        onClick: handleInstallApp,
+                        className: 'bg-white text-green-600 px-3 py-1 rounded text-xs font-semibold mr-2'
+                    }, '설치'),
+                    React.createElement('button', { 
+                        key: 'close-btn',
+                        onClick: () => setShowInstallPrompt(false),
+                        className: 'text-green-100 text-xs'
+                    }, '✕')
+                ]),
+
+                React.createElement('div', { 
+                    key: 'header',
+                    className: 'bg-blue-600 p-4 text-center' 
+                }, [
+                    React.createElement('div', { 
+                        key: 'title-row',
+                        className: 'flex items-center justify-center gap-2 mb-2' 
+                    }, [
+                        React.createElement('span', { key: 'icon' }, '🕐'),
+                        React.createElement('h1', { 
+                            key: 'title',
+                            className: 'text-xl font-bold' 
+                        }, '시간 기록 워치')
+                    ]),
+                    React.createElement('div', { 
+                        key: 'time',
+                        className: 'text-sm opacity-90' 
+                    }, currentTime.toLocaleString('ko-KR'))
+                ]),
+
+                React.createElement('div', { 
+                    key: 'main',
+                    className: 'p-6 text-center' 
+                }, [
+                    React.createElement('div', { 
+                        key: 'timer-box',
+                        className: 'bg-gray-800 rounded-2xl p-8 mb-6' 
+                    }, [
+                        React.createElement('div', { 
+                            key: 'timer-display',
+                            className: 'text-6xl font-mono font-bold mb-4 text-blue-400' 
+                        }, formatTime(time)),
+                        
+                        React.createElement('input', { 
+                            key: 'task-input',
+                            type: 'text',
+                            placeholder: '작업명 입력...',
+                            value: taskName,
+                            onChange: (e) => setTaskName(e.target.value),
+                            className: 'w-full bg-gray-700 text-white px-4 py-2 rounded-lg mb-4 text-center'
+                        }),
+
+                        React.createElement('div', { 
+                            key: 'controls',
+                            className: 'flex justify-center gap-3' 
+                        }, [
+                            !isRunning ? 
+                                React.createElement('button', { 
+                                    key: 'start-btn',
+                                    onClick: handleStart,
+                                    className: 'flex items-center gap-2 bg-green-600 hover:bg-green-700 px-6 py-3 rounded-full transition-colors'
+                                }, ['▶️', ' 시작']) :
+                                React.createElement('button', { 
+                                    key: 'pause-btn',
+                                    onClick: handlePause,
+                                    className: 'flex items-center gap-2 bg-yellow-600 hover:bg-yellow-700 px-6 py-3 rounded-full transition-colors'
+                                }, ['⏸️', ' 일시정지']),
+                            
+                            React.createElement('button', { 
+                                key: 'save-btn',
+                                onClick: handleSave,
+                                disabled: time === 0,
+                                className: `flex items-center gap-2 px-6 py-3 rounded-full transition-colors ${
+                                    time > 0 
+                                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                                        : 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                                }`
+                            }, ['💾', ' 저장']),
+                            
+                            React.createElement('button', { 
+                                key: 'reset-btn',
+                                onClick: handleReset,
+                                disabled: time === 0,
+                                className: `flex items-center gap-2 px-4 py-3 rounded-full transition-colors ${
+                                    time > 0 
+                                        ? 'bg-gray-600 hover:bg-gray-700 text-white' 
+                                        : 'bg-gray-700 text-gray-500 cursor-not-allowed'
+                                }`
+                            }, '🔄')
+                        ])
+                    ])
+                ]),
+
+                React.createElement('div', { 
+                    key: 'records',
+                    className: 'px-4 pb-6' 
+                }, [
+                    React.createElement('div', { 
+                        key: 'records-header',
+                        className: 'flex justify-between items-center mb-4' 
+                    }, [
+                        React.createElement('h2', { 
+                            key: 'records-title',
+                            className: 'text-lg font-semibold' 
+                        }, '시간 기록'),
+                        React.createElement('div', { 
+                            key: 'records-controls',
+                            className: 'flex items-center gap-3' 
+                        }, records.length > 0 ? [
+                            React.createElement('div', { 
+                                key: 'total-time',
+                                className: 'text-sm text-blue-400' 
+                            }, `총 시간: ${formatTime(getTotalTime())}`),
+                            React.createElement('button', { 
+                                key: 'clear-all',
+                                onClick: handleClearAllRecords,
+                                className: 'text-red-400 hover:text-red-300 text-sm'
+                            }, '전체삭제')
+                        ] : [])
+                    ]),
+
+                    records.length === 0 ? 
+                        React.createElement('div', { 
+                            key: 'no-records',
+                            className: 'text-center text-gray-500 py-8' 
+                        }, '아직 기록된 시간이 없습니다') :
+                        React.createElement('div', { 
+                            key: 'records-list',
+                            className: 'space-y-3' 
+                        }, records.map((record) => 
+                            React.createElement('div', { 
+                                key: record.id,
+                                className: 'bg-gray-800 rounded-lg p-4' 
+                            }, [
+                                React.createElement('div', { 
+                                    key: 'record-content',
+                                    className: 'flex justify-between items-start' 
+                                }, [
+                                    React.createElement('div', { 
+                                        key: 'record-info',
+                                        className: 'flex-1' 
+                                    }, [
+                                        React.createElement('div', { 
+                                            key: 'task-name',
+                                            className: 'font-semibold text-blue-400 mb-1' 
+                                        }, record.taskName),
+                                        React.createElement('div', { 
+                                            key: 'duration',
+                                            className: 'text-2xl font-mono font-bold mb-2' 
+                                        }, formatTime(record.duration)),
+                                        React.createElement('div', { 
+                                            key: 'times',
+                                            className: 'text-sm text-gray-400 space-y-1' 
+                                        }, [
+                                            React.createElement('div', { key: 'start' }, `시작: ${record.startTime}`),
+                                            React.createElement('div', { key: 'end' }, `종료: ${record.endTime}`)
+                                        ])
+                                    ]),
+                                    React.createElement('button', { 
+                                        key: 'delete-btn',
+                                        onClick: () => handleDeleteRecord(record.id),
+                                        className: 'text-red-400 hover:text-red-300 p-2 ml-2'
+                                    }, '🗑️')
+                                ])
+                            ])
+                        ))
+                ])
+            ]);
+        }
+
+        ReactDOM.render(React.createElement(TimeTrackerWatch), document.getElementById('app'));
+    </script>
+</body>
+</html>
